@@ -1,11 +1,26 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import ProductConfirm from '../components/ProductConfirm.svelte';
+import ProductList from '../components/ProductList.svelte';
+import ProductSelector from '../components/ProductSelector.svelte';
+import ProductSettings from '../components/ProductSettings.svelte';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Helium: Cashier Mode">
+    <div class="grid grid-cols-3 gap-4 h-full p-4">
+        <div class="col-span-1 h-full">
+            <ProductSelector client:load class="h-full" />
+        </div>
+        <div class="col-span-1 h-full">
+            <ProductSettings client:load class="h-full" />
+        </div>
+        <div class="col-span-1 grid grid-rows-[2fr_1fr] gap-4 h-full">
+            <div class="row-span-1 overflow-hidden">
+                <ProductList client:load class="h-full" />
+            </div>
+            <div class="row-span-1 overflow-hidden">
+                <ProductConfirm client:load class="h-full" />
+            </div>
+        </div>
+    </div>
 </Layout>
