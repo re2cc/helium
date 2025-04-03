@@ -1,21 +1,19 @@
 <script lang="ts">
+    import { invoke } from "@tauri-apps/api/core";
+
+    import type { Item } from "../../../types/types";
     import List from "./List.svelte";
 
-    const productItems = [
-        { name: "Laptop", price: 1200, quantity: 5 },
-        { name: "Mouse", price: 25, quantity: 20 },
-        { name: "Keyboard", price: 75, quantity: 10 },
-        { name: "Monitor", price: 300, quantity: 8 },
-        { name: "Laptop", price: 1200, quantity: 5 },
-        { name: "Mouse", price: 25, quantity: 20 },
-        { name: "Keyboard", price: 75, quantity: 10 },
-        { name: "Monitor", price: 300, quantity: 8 },
-        { name: "Laptop", price: 1200, quantity: 5 },
-        { name: "Mouse", price: 25, quantity: 20 },
-        { name: "Keyboard", price: 75, quantity: 10 },
-        { name: "Monitor", price: 300, quantity: 8 },
-        { name: "Laptop", price: 1200, quantity: 5 },
-    ];
+    let seach_input = $state("");
+    let result = $derived.by(() => {
+        return search(seach_input);
+    });
+
+    function search(value: string): Promise<Item[]> {
+        return invoke("search_product", { value: value }).then((response) => {
+            return response as Item[];
+        });
+    }
 </script>
 
 <div
@@ -25,8 +23,12 @@
         type="text"
         placeholder="Search for products..."
         class="w-full p-2 border border-gray-300 rounded mb-4"
+        bind:value={seach_input}
     />
 
-    <!-- Simplified but more explicit structure -->
-    <List items={productItems} />
+    {#await result}
+        <List />
+    {:then items}
+        <List {items} />
+    {/await}
 </div>
