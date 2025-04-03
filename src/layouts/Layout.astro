@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import Navbar from "../components/Navbar.svelte";
+import Navbar from "../components/main/Navbar.svelte";
 import { ClientRouter } from "astro:transitions";
 
 const { title = "Helium" } = Astro.props;
@@ -34,10 +34,8 @@ const { title = "Helium" } = Astro.props;
 </html>
 
 <style is:global>
-    /* Basic reset */
     html, body {
         margin: 0;
         padding: 0;
     }
-    /* Removed nav rule as it's handled inline */
 </style>

@@ -1,14 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ProductConfirm from '../components/ProductConfirm.svelte';
-import ProductList from '../components/ProductList.svelte';
-import ProductSelector from '../components/ProductSelector.svelte';
-import ProductSettings from '../components/ProductSettings.svelte';
+import Confirm from '../components/modes/cashier/Confirm.svelte';
+import ProductList from '../components/modes/cashier/ProductList.svelte';
+import ProductSelector from '../components/modes/cashier/ProductSelector.svelte';
+import ProductSettings from '../components/modes/cashier/ProductSettings.svelte';
 ---
 
 <Layout title="Helium: Cashier Mode">
     <div class="grid grid-cols-3 gap-4 h-full p-4">
-        <div class="col-span-1 h-full">
+        <div class="col-span-1 h-full overflow-hidden">
             <ProductSelector client:load class="h-full" />
         </div>
         <div class="col-span-1 h-full">
@@ -19,7 +19,7 @@ import ProductSettings from '../components/ProductSettings.svelte';
                 <ProductList client:load class="h-full" />
             </div>
             <div class="row-span-1 overflow-hidden">
-                <ProductConfirm client:load class="h-full" />
+                <Confirm client:load class="h-full" />
             </div>
         </div>
     </div>
