@@ -23,6 +23,9 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.4", features = [] }
 tauri-plugin-log = "2.3"
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1.44.1", features = ["full"] }
+tauri-plugin-http = { version = "2" }
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]

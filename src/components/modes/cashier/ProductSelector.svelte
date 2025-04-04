@@ -10,7 +10,7 @@
     });
 
     function search(value: string): Promise<Item[]> {
-        return invoke("search_product", { value: value }).then((response) => {
+        return invoke("search_product", { searchValue: value }).then((response) => {
             return response as Item[];
         });
     }
