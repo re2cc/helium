@@ -2,6 +2,7 @@
     import { invoke } from "@tauri-apps/api/core";
 
     import type { BasicItem, CurrentItem } from "../../../types/types";
+    import { currentItem } from "../../../types/stores.ts";
 
     // Define the props the component accepts using Svelte 5's Props interface
     type Props = {
@@ -22,6 +23,7 @@
     function selectProduct(barcode: String): void {
         invoke("select_item", { barcode: barcode }).then((response) => {
             console.log(response as CurrentItem)
+            currentItem.set(response as CurrentItem)
         });
     }
 </script>
