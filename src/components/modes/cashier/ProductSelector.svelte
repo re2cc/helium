@@ -1,17 +1,17 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
 
-    import type { Item } from "../../../types/types";
+    import type { BasicItem } from "../../../types/types";
     import List from "./List.svelte";
 
-    let seach_input = $state("");
+    let search_input = $state("");
     let result = $derived.by(() => {
-        return search(seach_input);
+        return search(search_input);
     });
 
-    function search(value: string): Promise<Item[]> {
+    function search(value: string): Promise<BasicItem[]> {
         return invoke("search_product", { searchValue: value }).then((response) => {
-            return response as Item[];
+            return response as BasicItem[];
         });
     }
 </script>
@@ -23,7 +23,7 @@
         type="text"
         placeholder="Search for products..."
         class="w-full p-2 border border-gray-300 rounded mb-4"
-        bind:value={seach_input}
+        bind:value={search_input}
     />
 
     {#await result}

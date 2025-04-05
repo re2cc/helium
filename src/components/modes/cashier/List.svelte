@@ -1,11 +1,11 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
 
-    import type { Item } from "../../../types/types";
+    import type { BasicItem, CurrentItem } from "../../../types/types";
 
     // Define the props the component accepts using Svelte 5's Props interface
     type Props = {
-        items?: Item[];
+        items?: BasicItem[];
     };
 
     // Destructure props with default values if needed
@@ -19,8 +19,10 @@
         });
     }
 
-    function selectProduct(item: Item): void {
-        invoke("my_custom_command", { item: item });
+    function selectProduct(barcode: String): void {
+        invoke("select_item", { barcode: barcode }).then((response) => {
+            console.log(response as CurrentItem)
+        });
     }
 </script>
 
@@ -44,7 +46,7 @@
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div
                     class="flex border-b border-gray-200 last:border-b-0 hover:bg-gray-50 text-sm text-gray-800"
-                    onclick={() => selectProduct(item)}
+                    onclick={() => selectProduct(item.barcode)}
                 >
                     <div
                         class="w-3/5 py-2 px-4 text-left truncate"
@@ -56,7 +58,7 @@
                         {formatCurrency(item.price)}
                     </div>
                     <div class="w-1/5 py-2 px-4 text-right">
-                        {item.quantity}
+                        {item.available_quantity}
                     </div>
                 </div>
             {/each}
