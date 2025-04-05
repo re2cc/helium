@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "dev-tauri": "tauri dev",
+    "build-tauri": "tauri build"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.0.9",
