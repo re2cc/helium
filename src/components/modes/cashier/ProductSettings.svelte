@@ -1,5 +1,5 @@
 <script>
-    import { currentItem } from "../../../lib/stores.ts";
+    import { currentItem } from "@/lib/stores.js";
     import { Button } from "bits-ui";
 </script>
 

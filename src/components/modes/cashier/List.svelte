@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { BasicItem } from "../../../lib/types.ts";
-    import { selectProduct } from "../../../lib/tauri-com.ts"
+    import type { BasicItem } from "@/lib/types.ts";
+    import { selectProduct } from "@/lib/tauri-com.ts"
 
     // Define the props the component accepts using Svelte 5's Props interface
     type Props = {

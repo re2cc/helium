@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { searchProduct } from "../../../lib/tauri-com.ts";
-    import List from "./List.svelte";
+    import { searchProduct } from "@/lib/tauri-com.ts";
+    import List from "@/components/modes/cashier/List.svelte";
 
     let search_input = $state("");
     let result = $derived.by(() => {

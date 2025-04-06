@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 
-import type { BasicItem, CurrentItem } from "./types.ts";
-import { currentItem } from "./stores.ts";
+import type { BasicItem, CurrentItem } from "@/lib/types.ts";
+import { currentItem } from "@/lib/stores.ts";
 
 export function selectProduct(barcode: String): void {
     invoke<CurrentItem>("select_item", { barcode: barcode }).then((response) => {

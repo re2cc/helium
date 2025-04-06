@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 
-import type { CurrentItem } from "./types.ts";
+import type { CurrentItem } from "@/lib/types.ts";
 
 export const currentItem = atom<CurrentItem>({
     basic_item: {
