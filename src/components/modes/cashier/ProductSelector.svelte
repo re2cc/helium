@@ -1,19 +1,11 @@
 <script lang="ts">
-    import { invoke } from "@tauri-apps/api/core";
-
-    import type { BasicItem } from "../../../types/types";
+    import { searchProduct } from "../../../lib/tauri-com.ts";
     import List from "./List.svelte";
 
     let search_input = $state("");
     let result = $derived.by(() => {
-        return search(search_input);
+        return searchProduct(search_input);
     });
-
-    function search(value: string): Promise<BasicItem[]> {
-        return invoke("search_product", { searchValue: value }).then((response) => {
-            return response as BasicItem[];
-        });
-    }
 </script>
 
 <div

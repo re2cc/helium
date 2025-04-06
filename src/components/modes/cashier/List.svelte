@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { invoke } from "@tauri-apps/api/core";
-
-    import type { BasicItem, CurrentItem } from "../../../types/types";
-    import { currentItem } from "../../../types/stores.ts";
+    import type { BasicItem } from "../../../lib/types.ts";
+    import { selectProduct } from "../../../lib/tauri-com.ts"
 
     // Define the props the component accepts using Svelte 5's Props interface
     type Props = {
@@ -14,16 +12,9 @@
 
     // Helper to format currency (adjust locale and currency as needed)
     function formatCurrency(value: number): string {
-        return value.toLocaleString("en-US", {
+        return value.toLocaleString("es-MX", {
             style: "currency",
-            currency: "USD", // Change this to your desired currency (e.g., 'MXN')
-        });
-    }
-
-    function selectProduct(barcode: String): void {
-        invoke("select_item", { barcode: barcode }).then((response) => {
-            console.log(response as CurrentItem)
-            currentItem.set(response as CurrentItem)
+            currency: "MXN",
         });
     }
 </script>
