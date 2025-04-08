@@ -1,9 +1,3 @@
-#[derive(Default, Clone)]
-pub struct AppState {
-    pub client: tauri_plugin_http::reqwest::Client,
-    pub universal_state: UniversalState,
-}
-
 #[derive(Default, serde::Serialize, serde::Deserialize, Clone)]
 pub struct UniversalState {
     pub current_item: Option<CurrentItem>,

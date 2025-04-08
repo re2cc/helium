@@ -1700,7 +1700,6 @@ name = "helium-types"
 version = "0.1.0"
 dependencies = [
  "serde",
- "tauri-plugin-http",
  "ts-rs",
 ]
 
