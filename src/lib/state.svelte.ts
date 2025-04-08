@@ -1,13 +1,11 @@
 import type { CurrentItem } from "@/lib/types.ts";
 
-export const currentItem = $state<CurrentItem>({
-    basic_item: {
-        barcode: "",
-        name: "",
-        price: 0,
-        available_quantity: 0,
-    },
-    config_item: {
-        sell_quantity: 0,
-    },
-})
+let currentItem = $state<CurrentItem | null>(null)
+
+export function setCurrentItem(item: CurrentItem | null) {
+    currentItem = item;
+}
+
+export function getCurrentItem() {
+    return currentItem;
+}

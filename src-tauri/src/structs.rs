@@ -4,6 +4,7 @@ use tauri_plugin_http::reqwest::Client;
 pub struct AppState {
     pub client: Client,
     pub current_item: Option<CurrentItem>,
+    pub item_list: Vec<CurrentItem>
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Clone)]

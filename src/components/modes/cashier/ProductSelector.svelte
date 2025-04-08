@@ -2,10 +2,8 @@
     import { searchProduct } from "@/lib/tauri-com.ts";
     import List from "@/components/modes/cashier/List.svelte";
 
-    let search_input = $state("");
-    let result = $derived.by(() => {
-        return searchProduct(search_input);
-    });
+    let searchInput = $state("");
+    let result = $derived(searchProduct(searchInput));
 </script>
 
 <div
@@ -15,7 +13,7 @@
         type="text"
         placeholder="Search for products..."
         class="w-full p-2 border border-gray-300 rounded mb-4"
-        bind:value={search_input}
+        bind:value={searchInput}
     />
 
     {#await result}
