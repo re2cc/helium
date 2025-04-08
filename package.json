@@ -7,8 +7,12 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "dev-tauri": "tauri dev",
-    "build-tauri": "tauri build"
+    "dev-helium": "concurrently \"cargo-watch -- cargo run --bin api-server\" \"tauri dev\"",
+    "dev-gui": "tauri dev",
+    "dev-api": "cargo-watch -- cargo run --bin api-server",
+    "build-helium": "cargo build --bin api-server --release && tauri build",
+    "build-gui": "tauri build --release",
+    "build-api": "cargo build --bin api-server --release"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.0.9",
@@ -23,6 +27,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.4.1",
+    "concurrently": "^9.1.2",
     "prettier": "^3.5.3",
     "prettier-plugin-svelte": "^3.3.3"
   }
