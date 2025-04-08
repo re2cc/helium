@@ -1,0 +1,21 @@
+[workspace]
+resolver = "3"
+members = [
+    "api-server",
+    "common-types",
+    "src-tauri"
+]
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
+
+# Enable a small amount of optimization in the dev profile.
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
