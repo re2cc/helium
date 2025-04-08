@@ -5,3 +5,7 @@ edition = "2024"
 rust-version = "1.86.0"
 
 [dependencies]
+helium-types = { path = "../helium-types" }
+sea-orm = { version = "1.1.0", features = [ "sqlx-sqlite", "runtime-tokio-native-tls", "macros" ] }
+tokio = { version = "1.44", features = ["full"] }
+axum = "0.8"
