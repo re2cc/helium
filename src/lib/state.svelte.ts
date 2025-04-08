@@ -1,5 +1,3 @@
-import { atom } from "nanostores";
-
 import type { CurrentItem } from "@/lib/types.ts";
 
 export const currentItem = $state<CurrentItem>({
