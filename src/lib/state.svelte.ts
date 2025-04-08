@@ -2,7 +2,7 @@ import { atom } from "nanostores";
 
 import type { CurrentItem } from "@/lib/types.ts";
 
-export const currentItem = atom<CurrentItem>({
+export const currentItem = $state<CurrentItem>({
     basic_item: {
         barcode: "",
         name: "",
