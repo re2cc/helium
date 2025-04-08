@@ -2,7 +2,7 @@
 resolver = "3"
 members = [
     "api-server",
-    "common-types",
+    "helium-types",
     "src-tauri"
 ]
 
