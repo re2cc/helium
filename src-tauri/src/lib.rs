@@ -5,13 +5,14 @@ use tokio::sync::Mutex;
 use tauri::State;
 
 mod app_state;
+use app_state::AppState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_http::init())
         .setup(|app| {
-            app.manage(Mutex::new(app_state::AppState {
+            app.manage(Mutex::new(AppState {
                 client: reqwest::Client::new(),
                 universal_state: helium_types::UniversalState {
                     current_item: None,
@@ -33,7 +34,7 @@ pub fn run() {
 }
 
 #[tauri::command]
-async fn select_item(barcode: String, state: State<'_, Mutex<app_state::AppState>>) -> Result<helium_types::CurrentItem, ()> {
+async fn select_item(barcode: String, state: State<'_, Mutex<AppState>>) -> Result<helium_types::CurrentItem, ()> {
     let mut state = state.lock().await;
     state.universal_state.current_item = Some(helium_types::CurrentItem {
         basic_item: helium_types::BasicItem {
@@ -50,7 +51,7 @@ async fn select_item(barcode: String, state: State<'_, Mutex<app_state::AppState
 }
 
 #[tauri::command]
-async fn search_product(search_value: String, state: State<'_, Mutex<app_state::AppState>>) -> Result<Vec<helium_types::BasicItem>, ()> {
+async fn search_product(search_value: String, state: State<'_, Mutex<AppState>>) -> Result<Vec<helium_types::BasicItem>, ()> {
     let response: reqwest::Response;
 
     {
@@ -71,7 +72,7 @@ async fn search_product(search_value: String, state: State<'_, Mutex<app_state::
 }
 
 #[tauri::command]
-async fn add_product(barcode: String, item_config: helium_types::ConfigItem, state: State<'_, Mutex<app_state::AppState>>) -> Result<bool, ()> {
+async fn add_product(barcode: String, item_config: helium_types::ConfigItem, state: State<'_, Mutex<AppState>>) -> Result<bool, ()> {
     let mut state = state.lock().await;
 
     println!("Added: {}", barcode);
