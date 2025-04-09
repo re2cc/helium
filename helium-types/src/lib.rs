@@ -1,16 +1,18 @@
-#[derive(Default, serde::Serialize, serde::Deserialize, Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Default, Serialize, Deserialize, Clone)]
 pub struct UniversalState {
     pub current_item: Option<CurrentItem>,
     pub item_list: Vec<CurrentItem>,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct CurrentItem {
     pub basic_item: BasicItem,
     pub config_item: ConfigItem,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct BasicItem {
     pub barcode: String,
     pub name: String,
@@ -18,7 +20,17 @@ pub struct BasicItem {
     pub available_quantity: u32,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct ConfigItem{
     pub sell_quantity: u32,
+}
+
+#[derive(Deserialize)]
+pub struct SearchParams {
+    pub q: String,
+}
+
+#[derive(Deserialize)]
+pub struct SelectItemParams {
+    pub barcode: String,
 }

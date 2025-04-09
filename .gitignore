@@ -29,3 +29,4 @@ pnpm-debug.log*
 /gen/schemas
 
 *.txt
+/persistent/
