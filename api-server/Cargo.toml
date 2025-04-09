@@ -9,3 +9,4 @@ sea-orm = { version = "1.1", features = [ "sqlx-sqlite", "runtime-tokio-native-t
 tokio = { version = "1.44", features = ["full"] }
 axum = "0.8"
 helium-types = { path = "../helium-types" }
+tantivy = "0.24.0"
