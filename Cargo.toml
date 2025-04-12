@@ -3,7 +3,7 @@ resolver = "3"
 members = [
     "api-server",
     "helium-types",
-    "src-tauri"
+    "src-tauri",
 ]
 
 # Enable a small amount of optimization in the dev profile.

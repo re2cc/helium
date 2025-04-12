@@ -29,4 +29,4 @@ pnpm-debug.log*
 /gen/schemas
 
 *.txt
-/persistent/
+/api-server/persistent/
