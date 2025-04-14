@@ -1,23 +1,28 @@
-use api_server::run_migrations;
-use axum::{
-    extract::{Json, Query},
-    routing::get,
-    Router,
-};
 use std::sync::Arc;
 
+use axum::{
+    Router,
+    extract::{Json, Query},
+    routing::get,
+};
+use dotenvy::dotenv_override;
+
+use api_server::run_migrations;
 use helium_types::*;
 mod app_state;
 use app_state::AppState;
-
+mod config_setter;
+use config_setter::HeliumSettings;
 mod schema;
 use schema::posts;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let database_url = "F:/Pers/work/helium/helium_gui/api-server/persistent/db.sqlite";
+    dotenv_override().ok();
 
-    let state = Arc::new(AppState::new(database_url)?);
+    let settings = HeliumSettings::new();
+
+    let state = Arc::new(AppState::new(&settings.database_path)?);
     run_migrations(state.pool.get().await?).await?;
 
     let app = Router::new()
@@ -25,7 +30,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/select_item", get(select_item))
         .with_state(state);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", settings.port))
+        .await
+        .unwrap();
     println!("Listening on {} ...", listener.local_addr().unwrap());
     axum::serve(listener, app).await.unwrap();
 
@@ -37,7 +44,7 @@ async fn search(
     state: axum::extract::State<Arc<AppState>>,
 ) -> Json<Vec<BasicItem>> {
     println!("{}", params.q);
-    todo!("Implement selection logic");
+    todo!("Implement search logic");
 }
 
 async fn select_item(
