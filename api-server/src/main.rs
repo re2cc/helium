@@ -13,8 +13,6 @@ mod app_state;
 use app_state::AppState;
 mod config_setter;
 use config_setter::HeliumSettings;
-mod schema;
-use schema::posts;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
