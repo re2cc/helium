@@ -30,11 +30,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/select_item", get(select_item))
         .with_state(state);
 
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", settings.port))
-        .await
-        .unwrap();
-    println!("Listening on {} ...", listener.local_addr().unwrap());
-    axum::serve(listener, app).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", settings.port)).await?;
+    println!("Listening on {} ...", listener.local_addr()?);
+    axum::serve(listener, app).await?;
 
     Ok(())
 }
