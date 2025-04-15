@@ -8,9 +8,9 @@ rust-version = "1.86.0"
 tokio = { version = "1.44", features = ["full"] }
 axum = "0.8"
 libsqlite3-sys = { version = "0.32", features = ["bundled"] }
-diesel = { version = "2.2", features = ["sqlite", "returning_clauses_for_sqlite_3_35", "chrono"] }
-diesel-async = { version = "0.5", features = ["sqlite", "sync-connection-wrapper", "async-connection-wrapper", "deadpool", "tokio"] }
-diesel_migrations = { version = "2.2", features = ["sqlite"] }
+#diesel = { version = "2.2", features = ["sqlite", "returning_clauses_for_sqlite_3_35", "chrono"] }
+#diesel-async = { version = "0.5", features = ["sqlite", "sync-connection-wrapper", "async-connection-wrapper", "deadpool", "tokio"] }
+#diesel_migrations = { version = "2.2", features = ["sqlite"] }
 tantivy = "0.24.0"
 helium-types = { path = "../helium-types" }
 dotenvy = "0.15.7"
