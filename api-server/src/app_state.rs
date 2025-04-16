@@ -1,26 +1,32 @@
-use diesel::SqliteConnection;
-use diesel_async::{
-    pooled_connection::{AsyncDieselConnectionManager, deadpool::Pool},
-    sync_connection_wrapper::SyncConnectionWrapper,
-};
+use sqlx::{Pool, Sqlite, migrate::MigrateError, sqlite::SqlitePoolOptions};
 use std::fs::OpenOptions;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub pool: Pool<SyncConnectionWrapper<SqliteConnection>>,
+    pub pool: Pool<Sqlite>,
 }
 
 impl AppState {
-    pub fn new(database_file: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub async fn new(database_file: &str) -> Result<Self, Box<dyn std::error::Error>> {
+        // DB file creation if not exists
         OpenOptions::new()
-            .append(true)
+            .read(true)
+            .write(true)
             .create(true)
+            .truncate(false)
             .open(database_file)?;
 
-        let config = AsyncDieselConnectionManager::<SyncConnectionWrapper<SqliteConnection>>::new(
-            database_file,
-        );
-        let pool = Pool::builder(config).build()?;
+        let pool = SqlitePoolOptions::new()
+            .min_connections(1)
+            .max_connections(3)
+            .connect(&format!("sqlite://{}", database_file))
+            .await?;
+
         Ok(AppState { pool })
+    }
+
+    pub async fn run_migrations(&self) -> Result<(), MigrateError> {
+        sqlx::migrate!().run(&self.pool).await?;
+        Ok(())
     }
 }

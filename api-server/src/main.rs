@@ -7,7 +7,6 @@ use axum::{
 };
 use dotenvy::dotenv_override;
 
-use api_server::run_migrations;
 use helium_types::*;
 mod app_state;
 use app_state::AppState;
@@ -20,8 +19,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let settings = HeliumSettings::new();
 
-    let state = Arc::new(AppState::new(&settings.database_path)?);
-    run_migrations(state.pool.get().await?).await?;
+    let state = Arc::new(AppState::new(&settings.database_path).await?);
+    state.run_migrations().await?;
 
     let app = Router::new()
         .route("/search", get(search))
