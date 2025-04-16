@@ -5,5 +5,11 @@ edition = "2024"
 rust-version = "1.86.0"
 
 [dependencies]
-ts-rs = "10.1"
+ts-rs = { version = "10.1", optional = true }
+sqlx ={ version = "0.8", features = ["derive"], optional = true }
 serde = { version = "1.0", features = ["derive"] }
+
+[features]
+default = []
+backend = ["sqlx"]
+frontend = ["ts-rs"]
