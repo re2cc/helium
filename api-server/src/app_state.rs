@@ -1,18 +1,17 @@
 use sqlx::{Pool, Sqlite, migrate::MigrateError, sqlite::SqlitePoolOptions};
-use std::{
-    fs::{OpenOptions, read},
-    path::Path,
-};
-use tantivy::{
-    Index, IndexWriter, ReloadPolicy, Searcher, collector::TopDocs, directory::MmapDirectory, doc,
-    query::QueryParser, schema::*,
-};
+use std::{fs::OpenOptions, path::Path};
+use tantivy::{Index, IndexWriter, ReloadPolicy, Searcher, directory::MmapDirectory, schema::*};
 use tokio::{fs, sync::Mutex};
 
 pub struct AppState {
     pub pool: Pool<Sqlite>,
     pub index_writer: Mutex<IndexWriter>,
+    pub index_fields: IndexFields,
     index_reader: tantivy::IndexReader,
+}
+
+pub struct IndexFields {
+    pub name: Field,
 }
 
 impl AppState {
@@ -53,9 +52,14 @@ impl AppState {
             .reload_policy(ReloadPolicy::OnCommitWithDelay)
             .try_into()?;
 
+        let index_fields = IndexFields {
+            name: schema.get_field("name")?,
+        };
+
         Ok(AppState {
             pool,
             index_writer,
+            index_fields,
             index_reader: reader,
         })
     }
