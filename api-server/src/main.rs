@@ -19,7 +19,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let settings = HeliumSettings::new();
 
-    let state = Arc::new(AppState::new(&settings.database_path).await?);
+    let state =
+        Arc::new(AppState::new(&settings.database_file_path, &settings.index_dir_path).await?);
     state.run_migrations().await?;
 
     let app = Router::new()
