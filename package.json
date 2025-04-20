@@ -9,7 +9,7 @@
     "astro": "astro",
     "dev-helium": "concurrently \"cargo-watch -- cargo run --bin api-server -- -p 8080 -d api-server/persistent/db.sqlite -i api-server/persistent/index/\" \"tauri dev\"",
     "dev-gui": "tauri dev",
-    "dev-api": "cargo-watch -- cargo run --bin api-server",
+    "dev-api": "cargo-watch -- cargo run --bin api-server -- -p 8080 -d api-server/persistent/db.sqlite -i api-server/persistent/index/",
     "build-helium": "cargo build --bin api-server --release && tauri build",
     "build-gui": "tauri build --release",
     "build-api": "cargo build --bin api-server --release"
