@@ -12,6 +12,7 @@ pub struct AppState {
 
 pub struct IndexFields {
     pub name: Field,
+    pub id: Field,
 }
 
 impl AppState {
@@ -43,7 +44,8 @@ impl AppState {
 
         // Create tantivy index, index writer, and reader
         let mut schema_builder = Schema::builder();
-        schema_builder.add_text_field("name", TEXT | STORED);
+        let name_field = schema_builder.add_text_field("name", TEXT | STORED);
+        let id_field = schema_builder.add_u64_field("id", INDEXED | STORED);
         let schema = schema_builder.build();
         let index = Index::open_or_create(MmapDirectory::open(index_dir_path)?, schema.clone())?;
         let index_writer = Mutex::new(index.writer(50_000_000)?);
@@ -53,7 +55,8 @@ impl AppState {
             .try_into()?;
 
         let index_fields = IndexFields {
-            name: schema.get_field("name")?,
+            name: name_field,
+            id: id_field,
         };
 
         Ok(AppState {
