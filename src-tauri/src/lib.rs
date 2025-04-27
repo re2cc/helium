@@ -40,8 +40,8 @@ async fn select_item(barcode: String, state: State<'_, Mutex<AppState>>) -> Resu
         basic_item: helium_types::BasicItem {
             barcode: barcode,
             name: "Product Name".to_string(),
-            price: 100,
-            available_quantity: 10,
+            current_inventory: 10,
+            current_sell_price: 100,
         },
         config_item: helium_types::ConfigItem {
             sell_quantity: 1,
@@ -64,8 +64,8 @@ async fn search_product(search_value: String, state: State<'_, Mutex<AppState>>)
     results.push(helium_types::BasicItem {
         barcode: "1234567890123".to_string(),
         name: "Product 1".to_string(),
-        price: 100,
-        available_quantity: 10,
+        current_inventory: 10,
+        current_sell_price: 100,
     });
 
     Ok(results)
@@ -81,8 +81,8 @@ async fn add_product(barcode: String, item_config: helium_types::ConfigItem, sta
         basic_item: helium_types::BasicItem {
             barcode: barcode,
             name: "Product Name".to_string(),
-            price: 100,
-            available_quantity: 10,
+            current_inventory: 10,
+            current_sell_price: 100,
         },
         config_item: item_config.clone(),
     });
