@@ -32,11 +32,25 @@ pub struct SearchParams {
 }
 
 #[derive(Deserialize)]
-pub struct SelectItemParams {
+pub struct SelectProductParams {
     pub barcode: String,
 }
 
 #[derive(Deserialize)]
-pub struct AddItemParams {
+pub struct AddProductVariationParams {
+    //todo
+}
+
+#[derive(Deserialize)]
+struct ProductSpecs {
+    //todo
+}
+
+
+#[derive(Deserialize)]
+pub struct AddProductParams {
+    pub variation_enabled: bool,
+    pub variation_name: Option<String>,
     pub name: String,
+    pub barcode: String,
 }

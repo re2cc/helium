@@ -29,8 +29,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/search", get(search))
-        .route("/select_item", get(select_item))
-        .route("/add_item", post(add_item))
+        .route("/select_item", get(select_product))
+        .route("/add_item", post(add_product))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", settings.port)).await?;
@@ -72,7 +72,7 @@ async fn search(
     }
     
     let (sql, values) = SeaQuery::select()
-        .column(ProductVariation::Name)
+        .column(ProductVariation::FullName)
         .column(ProductVariation::Barcode)
         .column(ProductVariation::CurrentSellPrice)
         .column(ProductVariation::CurrentInventory)
@@ -89,9 +89,9 @@ async fn search(
 }
 
 #[axum::debug_handler]
-async fn select_item(
+async fn select_product(
     state: axum::extract::State<Arc<AppState>>,
-    Query(params): Query<SelectItemParams>,
+    Query(params): Query<SelectProductParams>,
 ) -> Json<CurrentItem> {
     let conn = state.pool.acquire().await.unwrap();
     println!("{}", params.barcode);
@@ -99,23 +99,43 @@ async fn select_item(
 }
 
 #[axum::debug_handler]
-async fn add_item(
+async fn add_product(
     state: axum::extract::State<Arc<AppState>>,
-    Json(params): Json<AddItemParams>,
+    Json(params): Json<AddProductParams>,
 ) -> Json<bool> {
-    let new_doc = doc!(
-        state.index_fields.name => params.name,
-        state.index_fields.id => u64::from(params.name.len() as u32),
-    );
-    {
-        // I could delete the let statement and use state.index_writer.lock().await directly, but I prefer to keep it to remember
-        // that i can use it for more than one document
-        let mut index_writer = state.index_writer.lock().await;
-        index_writer
-            .add_document(new_doc)
-            .unwrap();
-        index_writer.commit().unwrap();
-    }
-    todo!("Implement database addition logic");
+    let (sql, values) = SeaQuery::insert()
+        .into_table(Product::Table)
+        .columns([
+            Product::Name,
+            Product::Barcode,
+            Product::VariationEnabled,
+            Product::VariationName,
+        ])
+        .values([
+            params.name.into(),
+            params.barcode.into(),
+            params.variation_enabled.into(),
+            params.variation_name.into(),
+        ])
+        .unwrap()
+        .build_sqlx(SqliteQueryBuilder);
+
+    // let result = sqlx::query_with(&sql, values).execute(&state.pool).await.unwrap();
+    // result.last_insert_rowid();
+
+    // let new_doc = doc!(
+    //     state.index_fields.name => params.name,
+    //     state.index_fields.id => u64::from(params.name.len() as u64),
+    // );
+    // {
+    //     // I could delete the let statement and use state.index_writer.lock().await directly, but I prefer to keep it to remember
+    //     // that i can use it for more than one document
+    //     let mut index_writer = state.index_writer.lock().await;
+    //     index_writer
+    //         .add_document(new_doc)
+    //         .unwrap();
+    //     index_writer.commit().unwrap();
+    // }
+    // todo!("Implement database addition logic");
     return Json(true);
 }

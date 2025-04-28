@@ -2,17 +2,19 @@
 
 CREATE TABLE product (
     id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL, -- e.g. "Coca-Cola"
+    barcode TEXT NOT NULL UNIQUE,
     variation_enabled BOOLEAN NOT NULL,
     variation_name TEXT
 );
 
 CREATE TABLE product_variation (
     id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
+    full_name TEXT NOT NULL, -- e.g. "Coca-Cola 2L"
+    short_name TEXT NOT NULL, -- e.g. "2L"
     barcode TEXT NOT NULL UNIQUE,
     current_sell_price DECIMAL(10,2) NOT NULL,
-    current_inventary DECIMAL(10,2) NOT NULL,
+    current_inventory DECIMAL(10,2) NOT NULL,
     product_id INTEGER NOT NULL REFERENCES product(id)
 );
 
