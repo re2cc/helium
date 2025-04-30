@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "backend")]
 use sqlx::FromRow;
 
 #[derive(Default, Serialize, Deserialize, Clone)]
@@ -13,7 +15,8 @@ pub struct CurrentItem {
     pub config_item: ConfigItem,
 }
 
-#[derive(Serialize, Deserialize, FromRow, Debug, Clone)]
+#[cfg_attr(feature = "backend", derive(FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BasicItem {
     pub name: String,
     pub barcode: String,
@@ -22,7 +25,7 @@ pub struct BasicItem {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-pub struct ConfigItem{
+pub struct ConfigItem {
     pub sell_quantity: u32,
 }
 
@@ -45,7 +48,6 @@ pub struct AddProductVariationParams {
 struct ProductSpecs {
     //todo
 }
-
 
 #[derive(Deserialize)]
 pub struct AddProductParams {
