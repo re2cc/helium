@@ -2,9 +2,9 @@
 linker = "rust-lld.exe"
 rustdocflags = ["-Clinker=rust-lld.exe"]
 rustflags = [
-  # Nightly
-  "-Zshare-generics=n", # This needs to be off if you use dynamic linking on Windows.
-  "-Zthreads=0",
+    # Nightly
+    "-Zshare-generics=n", # This needs to be off if you use dynamic linking on Windows.
+    "-Zthreads=0",
 ]
 
 [unstable]
@@ -13,8 +13,8 @@ codegen-backend = true
 [profile.dev]
 codegen-backend = "cranelift"
 
-[profile.dev.package."*"]
-codegen-backend = "llvm"
+# [profile.dev.package."*"]
+# codegen-backend = "llvm"
 
-[build]
-incremental = false
+# [build]
+# incremental = false
