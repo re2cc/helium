@@ -6,16 +6,22 @@ use axum::{
     routing::{get, post},
 };
 use dotenvy::dotenv_override;
-use sea_query_binder::SqlxBinder;
-use tantivy::{collector::{Count, TopDocs}, doc, query::FuzzyTermQuery, schema::Value, TantivyDocument, Term};
 use sea_query::{Expr, Query as SeaQuery, SqliteQueryBuilder};
+use sea_query_binder::SqlxBinder;
+use tantivy::{
+    TantivyDocument, Term,
+    collector::{Count, TopDocs},
+    doc,
+    query::FuzzyTermQuery,
+    schema::Value,
+};
 
-use helium_types::*;
+use helium_types::request::*;
+use helium_types::response::*;
 mod models;
 use models::app_state::AppState;
 use models::config_setter::HeliumSettings;
-use models::tables_iden::{*};
-use models::sqlx_structs::{*};
+use models::tables_iden::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -48,13 +54,17 @@ async fn search(
     let searcher = state.searcher();
     let term = Term::from_field_text(state.index_fields.name, &params.q);
     let query = FuzzyTermQuery::new(term, 2, true);
-    let (top_docs, count) = searcher.search(&query, &(TopDocs::with_limit(10), Count)).unwrap();
+    let (top_docs, count) = searcher
+        .search(&query, &(TopDocs::with_limit(10), Count))
+        .unwrap();
 
     let ids: Vec<u64> = top_docs
         .into_iter()
         .filter_map(|(score, doc_address)| {
             let retrieved_doc: TantivyDocument = searcher.doc(doc_address).unwrap(); // Handle potential error
-            retrieved_doc.get_first(state.index_fields.id).and_then(|v| v.as_u64())
+            retrieved_doc
+                .get_first(state.index_fields.id)
+                .and_then(|v| v.as_u64())
         })
         .collect();
 
@@ -70,21 +80,21 @@ async fn search(
     if ids.is_empty() {
         return Json(vec![]);
     }
-    
+
     let (sql, values) = SeaQuery::select()
         .column(ProductVariation::FullName)
         .column(ProductVariation::Barcode)
         .column(ProductVariation::CurrentSellPrice)
         .column(ProductVariation::CurrentInventory)
         .from(ProductVariation::Table)
-        .and_where(
-            Expr::col(ProductVariation::Id)
-                .is_in(ids)
-        )
+        .and_where(Expr::col(ProductVariation::Id).is_in(ids))
         .build_sqlx(SqliteQueryBuilder);
 
-    let rows = sqlx::query_as_with::<_, BasicItem, _>(&sql, values).fetch_all(&state.pool).await.unwrap();
-    
+    let rows = sqlx::query_as_with::<_, BasicItem, _>(&sql, values)
+        .fetch_all(&state.pool)
+        .await
+        .unwrap();
+
     return Json(rows);
 }
 
@@ -92,7 +102,7 @@ async fn search(
 async fn select_product(
     state: axum::extract::State<Arc<AppState>>,
     Query(params): Query<SelectProductParams>,
-) -> Json<CurrentItem> {
+) -> Json<FullItem> {
     let conn = state.pool.acquire().await.unwrap();
     println!("{}", params.barcode);
     todo!("Implement selection logic");
