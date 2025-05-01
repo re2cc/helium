@@ -1,4 +1,4 @@
-use sea_query::{Iden, enum_def};
+use sea_query::Iden;
 
 #[derive(Iden)]
 pub enum Product {

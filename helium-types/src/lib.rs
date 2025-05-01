@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "frontend")]
+use ts_rs::TS;
+
 #[cfg(feature = "backend")]
 use sqlx::FromRow;
 
@@ -16,6 +19,7 @@ pub struct CurrentItem {
 }
 
 #[cfg_attr(feature = "backend", derive(FromRow))]
+#[cfg_attr(feature = "frontend", derive(TS), ts(export))]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BasicItem {
     pub name: String,
@@ -45,7 +49,7 @@ pub struct AddProductVariationParams {
 }
 
 #[derive(Deserialize)]
-struct ProductSpecs {
+pub struct ProductSpecs {
     //todo
 }
 
@@ -53,6 +57,7 @@ struct ProductSpecs {
 pub struct AddProductParams {
     pub variation_enabled: bool,
     pub variation_name: Option<String>,
+    pub product_specs: ProductSpecs,
     pub name: String,
     pub barcode: String,
 }
