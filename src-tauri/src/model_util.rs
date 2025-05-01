@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::response::BasicItem;
+use helium_types::response::BasicItem;
 
 #[derive(Default, Serialize, Deserialize, Clone)]
 pub struct UniversalState {
