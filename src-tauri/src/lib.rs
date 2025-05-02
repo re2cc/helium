@@ -1,11 +1,14 @@
 use std::vec;
 use tauri::Manager;
+use tauri::State;
 use tauri_plugin_http::reqwest;
 use tokio::sync::Mutex;
-use tauri::State;
 
 mod app_state;
 use app_state::AppState;
+mod model_util;
+use helium_types::response::*;
+use model_util::*;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -14,7 +17,7 @@ pub fn run() {
         .setup(|app| {
             app.manage(Mutex::new(AppState {
                 client: reqwest::Client::new(),
-                universal_state: helium_types::UniversalState {
+                universal_state: UniversalState {
                     current_item: None,
                     item_list: Vec::new(),
                 },
@@ -28,30 +31,38 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![select_item, search_product, add_product])
+        .invoke_handler(tauri::generate_handler![
+            select_item,
+            search_product,
+            add_product
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 #[tauri::command]
-async fn select_item(barcode: String, state: State<'_, Mutex<AppState>>) -> Result<helium_types::CurrentItem, ()> {
+async fn select_item(
+    barcode: String,
+    state: State<'_, Mutex<AppState>>,
+) -> Result<CurrentItem, ()> {
     let mut state = state.lock().await;
-    state.universal_state.current_item = Some(helium_types::CurrentItem {
-        basic_item: helium_types::BasicItem {
+    state.universal_state.current_item = Some(CurrentItem {
+        basic_item: BasicItem {
             barcode: barcode,
             name: "Product Name".to_string(),
             current_inventory: 10,
             current_sell_price: 100,
         },
-        config_item: helium_types::ConfigItem {
-            sell_quantity: 1,
-        },
+        config_item: ConfigItem { sell_quantity: 1 },
     });
     Ok(state.universal_state.current_item.clone().unwrap())
 }
 
 #[tauri::command]
-async fn search_product(search_value: String, state: State<'_, Mutex<AppState>>) -> Result<Vec<helium_types::BasicItem>, ()> {
+async fn search_product(
+    search_value: String,
+    state: State<'_, Mutex<AppState>>,
+) -> Result<Vec<BasicItem>, ()> {
     let response: reqwest::Response;
 
     {
@@ -60,8 +71,8 @@ async fn search_product(search_value: String, state: State<'_, Mutex<AppState>>)
     }
 
     println!("Search value: {}", search_value);
-    let mut results: Vec<helium_types::BasicItem> = Vec::new();
-    results.push(helium_types::BasicItem {
+    let mut results: Vec<BasicItem> = Vec::new();
+    results.push(BasicItem {
         barcode: "1234567890123".to_string(),
         name: "Product 1".to_string(),
         current_inventory: 10,
@@ -72,13 +83,17 @@ async fn search_product(search_value: String, state: State<'_, Mutex<AppState>>)
 }
 
 #[tauri::command]
-async fn add_product(barcode: String, item_config: helium_types::ConfigItem, state: State<'_, Mutex<AppState>>) -> Result<bool, ()> {
+async fn add_product(
+    barcode: String,
+    item_config: ConfigItem,
+    state: State<'_, Mutex<AppState>>,
+) -> Result<bool, ()> {
     let mut state = state.lock().await;
 
     println!("Added: {}", barcode);
 
-    state.universal_state.item_list.push(helium_types::CurrentItem {
-        basic_item: helium_types::BasicItem {
+    state.universal_state.item_list.push(CurrentItem {
+        basic_item: BasicItem {
             barcode: barcode,
             name: "Product Name".to_string(),
             current_inventory: 10,
